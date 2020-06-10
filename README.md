@@ -4,6 +4,10 @@ Hey there, [Gravity Simulator](https://us899.github.io/Gravity-Simulator) is a w
 * A website to simulate gravity and it's interaction with a system of objects(planets).
 * The calculations are done using Newton's law of universal gravitation.
 * Clicking adds an invisible mass that makes all other objects move towards it.
+* Use the sliders to modify the simulation in the following ways:
+  * Change the number of objects by using the first slider
+  * Change the speed at which objects are rendered by using the second slider
+  * Change the mass of objects by using the third slider
 * Press any key to stop the simulation
 ## Technologies Used:
 1. HTML/CSS
