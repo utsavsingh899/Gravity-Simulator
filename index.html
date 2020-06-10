@@ -3,22 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <link rel="icon" href="bitmoji_self.png" type="image/png">
     <link rel="preload" as="style" onload="this.rel='stylesheet'" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="preload" as="style" onload="this.rel='stylesheet'" href="main.css">
-    <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
-    <script type="text/javascript" src="main.js"></script>
+    
     <title>Gravity Simulator</title>
 </head>
 <body>
-    <h1 class="welcome display-1">Gravity Simulator</h1>
-    <p class="welcome">Hey there, Welcome!!</p>
-    <p class="welcome">This is a visual experiment simulating gravity in a system of interacting planets.</p>
+    <h1 class="display-1">Gravity Simulator</h1>
+    <p class="lead">Hey there, Welcome!!</p>
+    <p class="lead">This is a visual experiment simulating gravity in a system of interacting objects.</p>
+    <small class="muted-text">Clicking will add an invisible mass which makes all objects move towards it. The white circle represents centre of mass of all the other objects which are represted by colourful circles.</small>
+
     <br>
 
-    <label for="amount">Number of Planets:</label>
-    <div><input type="range" class="custom-range w-50 p-3" min="1" max="250" value="50" step="1" id="planetAmount"></div>
-    <div><button type="button" class="btn btn-light w-25 p-3" id="simulator">Simulate!!</button></div>
+    <div class="container">
+        <div class="row">
+            <div class="col">Number of Objects:</div>
+            <div class="col"><input type="range" class="custom-range" min="1" max="250" value="100" step="1" id="planetAmount"></div>
+        </div>
+        <div class="row">
+            <div class="col">Speed(fps):</div>
+            <div class="col"><input type="range" class="custom-range" min="1" max="100" value="60" step="1" id="fps"></div>
+        </div>
+        <div class="row">
+            <div class="col">Mass Multiplier:</div>
+            <div class="col"><input type="range" class="custom-range" min="1" max="100" value="20" step="1" id="massMultiplier"></div>
+        </div>
+    </div>
 
+    <br>
+    
+    <div><button type="button" class="btn btn-light w-50 p-3" id="simulator">Simulate</button></div>
+
+    <small class="muted-text">
+        <ul class="list-unstyled">
+            <li>Use the sliders to modify the simulation</li>
+            <li>Press any key to exit simulation</li>
+            <li>Documentation & source can be found at my GitHub</li>
+            <li>@us899</li>
+        </ul>
+    </small>
+    
+    <!-- Scripts -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script type="text/javascript" src="main.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>

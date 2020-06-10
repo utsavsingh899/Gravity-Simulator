@@ -1,6 +1,6 @@
 h1 {
-  padding-top: 20%;
-  padding-bottom: 3%;
+  margin-top: 10%;
+  margin-bottom: 3%;
 }
 
 body {
@@ -20,4 +20,19 @@ canvas {
 	left: 0px;
 	top: 0px;
 	background: black;
+}
+
+.container {
+    margin-top: 3%;
+    text-align: left;
+}
+
+#simulator {
+    margin-top: 2%;
+    margin-bottom: 5%;
+}
+
+.col {
+    padding-top: 5px;
+    padding-bottom: 5px;
 }

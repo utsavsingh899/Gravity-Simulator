@@ -4,6 +4,9 @@ var masses;
 var isMouseDown;
 var mouseX, mouseY;
 var params;
+var amt;
+var accuracy;
+var multipiler;
 
 var G = 100;
 var WALL_DAMP = 0.85;
@@ -12,7 +15,7 @@ var MOUSE_POWER = 30000;
 var PHI_CONJ = 0.618033988749895;
 var VI_RANGE = 100;
 
-// http://stackoverflow.com/a/901144/2514396
+// StackOverflow hack
 function getParameterByName(name, url) {
   if (!url) url = window.location.href;
   name = name.replace(/[\[\]]/g, '\\$&');
@@ -23,38 +26,29 @@ function getParameterByName(name, url) {
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
+// Used for the initial setup of the canvas
 function setup() {
   params = {
-    func     : Math.random,
-    amt      : 100,
-    accuracy : 60
+    func     : Math.random
   };
   var func = getParameterByName('func');
-  var amt = getParameterByName('amt');
-  var accuracy = getParameterByName('accuracy');
   if (func) {
     params.func = (function(s) {
       return function(x) { return 1 - (eval(s) % 1); };
     })(func);
   }
-  if (amt) {
-    params.amt = parseInt(amt);
-  }
-  if (accuracy) {
-    params.accuracy = parseInt(accuracy);
-  }
 
   masses = [];
   var h = Math.random();
-  for (var i = 0; i < params.amt; i++) {
+  for (var i = 0; i < amt; i++) {
     h += PHI_CONJ;
     h %= 1;
     var mass = {
       x: h * W,
       y: params.func(h) * H,
-      m: 1 + Math.random() * 100,
-      vx: (Math.random() * 2 - 1) * VI_RANGE / params.accuracy,
-      vy: (Math.random() * 2 - 1) * VI_RANGE / params.accuracy,
+      m: 1 + Math.random() * 10 * multipiler,
+      vx: (Math.random() * 2 - 1) * VI_RANGE / accuracy,
+      vy: (Math.random() * 2 - 1) * VI_RANGE / accuracy,
       real: true,
       color: hsv2rgb(h, 0.5, 0.95)
     };
@@ -67,9 +61,10 @@ function setup() {
     vx: 0,
     vy: 0,
     real: false
-  }); // dumby mass for when mouse pressed
+  }); // dummy mass for when mouse pressed
 }
 
+// Draws a circle, used for making the centre of mass circle
 function drawCircle(ctx, x, y, r, color) {
   ctx.strokeStyle = color;
   ctx.beginPath();
@@ -78,6 +73,7 @@ function drawCircle(ctx, x, y, r, color) {
   ctx.closePath();
 }
 
+// Draws & fills a circle, used for making the objects
 function fillCircle(ctx, x, y, r, color) {
   ctx.fillStyle = color;
   ctx.beginPath();
@@ -86,6 +82,7 @@ function fillCircle(ctx, x, y, r, color) {
   ctx.closePath();
 }
 
+// Calculates the centre of mass of all objects
 function centerofmass() {
   var ret = {
     x: 0,
@@ -111,14 +108,13 @@ function sign(x) {
   return x > 0 ? 1 : -1;
 }
 
+// Newton's law of universal gravitation, dampened
 function gforce(a, b) {
-  // Newton's law of universal gravitation, dampened
-  return (G / params.accuracy) * a.m * b.m / (Math.pow(H + W, 2) * GRAVITY_DAMP +
-      (a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y));
+  return (G / accuracy) * a.m * b.m / (Math.pow(H + W, 2) * GRAVITY_DAMP + (a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y));
 }
 
+// Returns unit vector in direction of a -> b
 function dir(a, b) {
-  // returns unit vector in direction of a -> b
   var d = Math.sqrt((a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y));
   return {
     x: (b.x - a.x) / d,
@@ -126,7 +122,7 @@ function dir(a, b) {
   };
 }
 
-// copyright at https://gist.github.com/schinckel/1588489#file-hsv2rgb-js
+// Converts hsv color code to rgb code
 function hsv2rgb(h, s, v) {
   var rgb, i, data = [];
   if (s === 0) {
@@ -161,6 +157,7 @@ function hsv2rgb(h, s, v) {
   }).join('');
 }
 
+// Used for calculating new positions for each object
 function run() {
   masses.forEach(function(mass, i) {
     masses.forEach(function(other, j) {
@@ -199,7 +196,7 @@ function run() {
     mass.y += mass.vy;
 
     if (isMouseDown) {
-      masses[params.amt] = {
+      masses[amt] = {
         x: mouseX,
         y: mouseY,
         m: MOUSE_POWER,
@@ -209,11 +206,12 @@ function run() {
       };
     }
     else {
-      masses[params.amt].m = 0;
+      masses[amt].m = 0;
     }
   });
 }
 
+// Used to draw the canvas
 function draw() {
   window.requestAnimationFrame(draw);
 
@@ -231,27 +229,28 @@ function draw() {
     }
   });
 
-  // draw CM
   var cm = centerofmass();
   drawCircle(ctx, cm.x, cm.y, 10, 'white');
 }
 
+// Function to start the simulation process
 function startSimulation() {
-  console.log("started");
-  running = 1;
-  // init
+  amt = document.getElementById("planetAmount").value;
+  accuracy = document.getElementById("fps").value;
+  multipiler = document.getElementById("massMultiplier").value;
+
   W = document.body.clientWidth;
   H = document.body.clientHeight;
 
-  // make canvases
   var $canvas = $('<canvas></canvas>');
   $(document.body).append($canvas);
-
   var $canvas0 = $('<canvas></canvas>');
+
   ctx = $canvas[0].getContext('2d');
   ctx.elem = $canvas[0];
   ctx0 = $canvas0[0].getContext('2d');
   ctx0.elem = $canvas0[0];
+
   $canvas.attr('width', W);
   $canvas.attr('height', H);
   $canvas.css('width', W);
@@ -265,12 +264,14 @@ function startSimulation() {
   mouseX = W / 2;
   mouseY = H / 2;
   isMouseDown = false;
+
   $canvas.on('mousedown', function(e) {
     e.preventDefault();
     isMouseDown = true;
     mouseX = e.pageX;
     mouseY = e.pageY;
   });
+
   $canvas.on('touchstart', function(e) {
     e.preventDefault();
     isMouseDown = true;
@@ -289,6 +290,7 @@ function startSimulation() {
     mouseX = e.pageX;
     mouseY = e.pageY;
   });
+
   $canvas.on('touchmove', function(e) {
     e.preventDefault();
     var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
@@ -296,19 +298,18 @@ function startSimulation() {
     mouseY = touch.pageY;
   });
 
-  if (running == 0)
-    return;
   setup();
-  setInterval(run, 1000 / params.accuracy);
+  setInterval(run, 1000 / accuracy);
   window.requestAnimationFrame(draw);
 }
 
+// Function to stop the simulation process
 function stopSimulation() {
-    window.location.replace("#"); //fill the site url
-    console.log("pressed");
+    window.location.replace("index.html");
 }
 
+// Main Function
 $(function() {
     document.getElementById("simulator").addEventListener("click", startSimulation);
-    document.addEventListener("keypress", stopSimulation);
+    document.addEventListener("keydown", stopSimulation);
 });
