@@ -14,5 +14,5 @@ Hey there, [Gravity Simulator](https://utsavsingh899.github.io/Gravity-Simulator
 2. JavaScript
 ### Contact Me:
 * [Email](mailto:utsavsingh899@gmail.com)
-* [Instagram](https://www.instagram.com/us_codes/)
+* [Instagram](https://www.instagram.com/utsavsingh899/)
 * [Facebook](https://www.facebook.com/utsav.singh.581)
